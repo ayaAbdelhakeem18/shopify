@@ -1,0 +1,95 @@
+.product-page{
+    margin-top: 70px;
+    display: flex;
+}
+.product-page .product-image{
+    display: flex;
+    margin-right: 120px;
+}
+.product-page .images-column img{
+    width: 79px;
+    height: 80px;
+    margin-bottom: 35px;
+}
+.product-page .images-column{
+    margin-right: 50px;
+}
+.product-page .images-column img{
+    cursor: pointer;
+}
+.product-page .big-image img{
+    width: 550px;
+    height: 450px;
+}
+.product-page .product-description .brand-name span{
+    font-weight: bolder;
+    font-size: 25px;
+}
+.product-page .product-description h3{
+    font-weight: 100;
+    font-size: 35px;
+    margin: 0;
+    margin-top: 10px;
+    margin-bottom: 35px;
+}
+.product-page .product-description span{
+    font-weight: 700;
+}
+.product-page .size ul{
+    list-style: none;
+    display: flex;
+}
+.product-page .size li:nth-child(2){
+    color: rgba(166, 166, 166, 1);
+    border: 1px solid rgba(166, 166, 166, 1);
+    cursor: auto;
+}
+.product-page .size ul li{
+    border: 2px solid black;
+    width: 63px;
+    height: 45px;
+    margin: 7px;
+    transform: translate(-48px, 2px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.product-page .product-description .color div{
+    display: inline;
+    margin: 5px;
+    padding-top: 9px;
+    padding-right: 27px;
+    cursor: pointer;
+}
+.product-page .color{
+    margin: 30px;
+    margin-left: 0;
+}
+.product-page .color .grey{
+    background-color: grey;
+}
+.product-page .color .black{
+background-color: black;
+}
+.product-page .color .offwhite{
+background-color: rgb(230, 230, 187);
+}
+.product-page .add-to-cart {
+background-color:rgba(94, 206, 123, 1);
+padding: 15px;
+cursor: pointer;
+color: white;
+text-align: center;
+font-weight: bold;
+}
+.product-page .product-description p{
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+.product-page .cart-price{
+    display: none;
+}
+.product-page form{
+    display: none;
+}

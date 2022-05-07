@@ -1,0 +1,15 @@
+.plp{
+    margin-top: 100px;
+}
+.products-list{
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(300px,1fr));
+}
+.plp h1{
+    margin-bottom: 110px;
+    font-size: 40px;
+    font-weight: 400;
+}
+.plp p{
+font-weight: bold;
+}
