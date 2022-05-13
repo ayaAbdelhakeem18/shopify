@@ -16,9 +16,9 @@ export default class Pdp extends React.Component {
       this.onChange=this.onChange.bind(this);
 
      this.myRef=createRef();
-     
-    }
-    state={
+
+
+    this.state={
         product_img:this.props.img,
         product_name:this.props.name,
         price:this.props.price,
@@ -28,6 +28,8 @@ export default class Pdp extends React.Component {
         value:1,
         clicked:this.props.clicked,
     }
+    }
+    
 
   handleSizeClick=(event)=>{
       if(event.target.innerText!=="S"){
@@ -71,19 +73,17 @@ handleImgClick(event){
 onChange(event){
 event.preventDefault();
 this.setState({value:event.target.value});
-
 }
-
 
   render() {
       const size=["XS","S","M","L"] ;
       const f=this.handleSizeClick;  
-      let at=this.props.childToParent;
+      console.log(this.props.value)
     return (
        
        <div className={this.props.class}>
        
-
+        <div className="flex-box">
         <div className='product-image'>
             <div className='images-column'>
                 <img src={this.state.product_img} onClick={this.handleImgClick} />
@@ -95,10 +95,11 @@ this.setState({value:event.target.value});
             </div>
         </div>
         <form>
-         <button onClick={(event)=>{this.setState({value:this.state.value+1});event.preventDefault();}}>+</button>   
+         <button onClick={(event)=>{this.setState((state)=>({ value:state.value+1}));event.preventDefault();}}>+</button>   
         <input type="number" min={1} className="quantity" value={this.state.value} onChange={this.onChange}/>
-        <button  onClick={this.state.value===1?(event)=>event.preventDefault():(event)=>{this.setState({value:this.state.value-1});event.preventDefault();}}>-</button>   
+        <button  onClick={this.state.value===1?(event)=>event.preventDefault():(event)=>{this.setState((state)=>({value:state.value-1}));event.preventDefault();}}>-</button>   
         </form>
+        </div>
         <div className='product-description'>
             <span className="brand-name">Apollo</span>
             <h3>{this.state.product_name}</h3>
@@ -111,7 +112,7 @@ this.setState({value:event.target.value});
                     } )}
                 </ul>
             </div>
-            <span>Color:</span>
+            <span className="color-span">Color:</span>
             <div className="color">
                 <div className="grey" onClick={this.handleColorClick}></div>
                 <div className="black" onClick={this.handleColorClick} ></div>
@@ -124,9 +125,10 @@ this.setState({value:event.target.value});
             <myContext.Consumer>
            { 
            (value)=>{return(
-           <div className="add-to-cart"  onClick={ value.f}>
+           <div className="add-to-cart"  onClick={()=>{ value.fG(this) ;value.fM(this.props)}}>
                ADD TO CART
-            </div>)}
+            </div> )}
+
             }
             </myContext.Consumer>
             <p className="description">

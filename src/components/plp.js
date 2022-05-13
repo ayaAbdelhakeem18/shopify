@@ -1,15 +1,20 @@
 import React from "react";
 import "../styling/plp.css";
 import {Link}from "react-router-dom";
+import {exchangeContext}from"./nav";
+
 
 
 class PLP extends React.Component {
  
     render() { 
-      console.log()
         return (
-<div className="plp">   
+     <div className="plp">   
      <h1>Category name</h1>
+     <exchangeContext.Consumer>
+       {(value)=>{
+         console.log(value)
+         return(
        <div className="products-list">
        {this.props.gender.map(function(ele,ind){
           return(
@@ -27,9 +32,11 @@ class PLP extends React.Component {
            </Link>
           
         )
-    })}
-  </div> 
-
+       })}
+  </div>
+   )}}
+       
+  </exchangeContext.Consumer>  
 </div>
         );
     }

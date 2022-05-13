@@ -12,7 +12,7 @@ justify-content: space-between;
  margin-right: 30px;
  font-weight: 600;
 }
-a{
+.nav-list a{
 color: black;
 text-decoration: none;
 width: fit-content;
@@ -39,4 +39,45 @@ height: fit-content;
 }
 .nav .activ a{
     color: rgba(94, 206, 123, 1);
+}
+.nav .bag{
+    position: relative;
+    cursor: pointer;
+}
+.mini-cart{
+    
+    position: absolute;
+    padding: 15px;
+    width: 300px;
+    top: 78px;
+    right: 89px;
+    border: 1px solid black;
+}
+.mini-cart h3{
+    display: inline;
+    padding: 10px;
+}
+.mini-cart .products{
+width: fit-content;
+background-color: white;
+z-index: 1;
+}
+.empty{
+    text-align: center;
+    font-weight: 600;
+    color: rgba(94, 206, 123, 1);
+}
+.select{
+ box-shadow: -7px 10px 18px #c2c6cead;
+ position: absolute;
+ display:none ;
+}
+.select option{
+    padding: 10px;
+    font-weight: 900;
+    cursor: pointer;
+
+}
+.select option:hover{
+    background: rgba(238, 238, 238, 1);
 }

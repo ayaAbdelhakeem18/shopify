@@ -4,6 +4,7 @@
     justify-content: space-between;
     border-bottom: 1px solid #8080804d ;
     padding-bottom: 20px;
+    margin-top: 25px;
     
 }
 .product-cart .images-column{
@@ -72,8 +73,6 @@ width: 308px;
     font-weight: 500;
 }
 .product-cart form{
-    position: absolute;
-    right: 400px;
     display: inline-grid;
 }
 .product-cart input{
@@ -91,4 +90,7 @@ width: 308px;
     font-size: 25px;
     cursor: pointer;
     border: 1px solid grey;
+}
+.product-cart .flex-box{
+    display: flex;
 }

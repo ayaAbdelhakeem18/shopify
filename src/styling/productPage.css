@@ -38,6 +38,7 @@
 .product-page .size ul{
     list-style: none;
     display: flex;
+    padding-left: 0
 }
 .product-page .size li:nth-child(2){
     color: rgba(166, 166, 166, 1);
@@ -49,7 +50,6 @@
     width: 63px;
     height: 45px;
     margin: 7px;
-    transform: translate(-48px, 2px);
     display: flex;
     justify-content: center;
     align-items: center;
