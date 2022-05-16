@@ -159,7 +159,7 @@ this.setState((state)=>({ quantity:state.quantity+1}))
             eur={()=>{this.setState({exchange_rate:1});this.setState({currency:"€"})}} jpy={()=>{this.setState({exchange_rate:data.latest[0].quote});this.setState({currency:"¥"})}}/>
       <Routes>
 
-          <Route path="/"  element={<PLP gender={this.state.gender.women}/>} />
+          <Route path="/ayaAbdelhakeem18/shopify.git"  element={<PLP gender={this.state.gender.women}/>} />
           <Route path="/men" element={<PLP gender={this.state.gender.men}/>}/>
           <Route path="/kids" element={<PLP gender={this.state.gender.kids}/>}/>
 
