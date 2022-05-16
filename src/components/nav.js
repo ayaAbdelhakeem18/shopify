@@ -6,10 +6,9 @@ import cart from "../images/Empty Cart.png";
 import currency from "../images/Group 1.png";
 import{Link} from"react-router-dom";
 import { myContext } from './App';
-import{change_currency}from "../graphql/queries";
-import {Query} from "@apollo/client/react/components";
+import { exchangeContext } from "./App";
 
-export let exchangeContext=React.createContext();
+
 
 class Nav extends React.Component {
     constructor(props){
@@ -17,13 +16,15 @@ class Nav extends React.Component {
       this.handleclick=this.handleclick.bind();
       this.handlecartclick=this.handlecartclick.bind(this);
       this.cancelfunc=this.cancelfunc.bind(this);
+      this.handlecurrency=this.handlecurrency.bind(this);
+
       this.minicart=createRef();
+      this.currencyref=createRef();
+      
       
       this.state={
         style:"",
         clicked:false,
-        exchange_rate:2,
-        currency:"EUR"
       }
     }
     
@@ -59,21 +60,26 @@ class Nav extends React.Component {
   this.minicart.current.style.display="none";
     this.setState({style:""})
   }
+  handlecurrency(){
+    if(this.state.clicked===false){
+      this.currencyref.current.style.display="block"
+      this.setState({clicked:true}) 
+    }
+    else{
+      this.currencyref.current.style.display="none";
+      this.setState({clicked:false})
+    }
   
+  
+  }
 
     
   
     render() { 
         return (
-          <exchangeContext.Provider value={{text:"hello"}}>
-         <Query query={change_currency}  >
-          {({error,data})=>{
-            if(error){
-              return <div>Error...</div>
-            }
-            return(
-
-        <div className="nav"  >
+        
+<myContext.Consumer>{(value)=>{return(<>
+  <div className="nav"  >
          <ul className="nav-list"  >
         <Link   to="/"> <li onClick={this.handleclick} className="activ" >WOMEN</li></Link>
         <Link to="/men"><li onClick={this.handleclick} >MEN</li></Link>
@@ -83,32 +89,32 @@ class Nav extends React.Component {
            
           <div className="icons" >
             {this.props.countproducts}
-           <img src={currency} className="currency"/>
-           <div className="select">
-             <option onClick={()=>{this.setState({exchange_rate:data.latest[1].quote});this.setState({currency:"USD"})}}>$ USD</option>
-             <option onClick={()=>{this.setState({exchange_rate:1});this.setState({currency:"EUR"})}}>€ EURO</option>
-             <option onClick={()=>{this.setState({exchange_rate:data.latest[0].quote});this.setState({currency:"JPY"})}}>¥ JPY</option>
+           <img src={currency} className="currency" onClick={this.handlecurrency}/>
+           <div className="select" ref={this.currencyref}>
+             <option onClick={this.props.usd}>$ USD</option>
+             <option onClick={this.props.eur}>€ EURO</option>
+             <option onClick={this.props.jpy}>¥ JPY</option>
            </div>
+           
            <img src={cart} className="bag" onClick={this.handlecartclick} onDoubleClick={this.cancelfunc} />
+          {value.minicart.length>0?<span className="countpro">{value.minicart.length}</span>:""} 
            
            <div className="mini-cart" ref={this.minicart}  >
            {this.state.style}
-           <myContext.Consumer>
-           {function(value){
-           return (
-           <><div className="heading">
+           
+           <div className="heading">
              <h3>My Bag :</h3>{value.minicart.length+ " Items"}
              </div> 
              <div className="products">
           
              <div>{value.minicart.map((el) => el)}</div>
             </div>
-            {value.minicart.length>1?<div className="total">Total <span>{value.minicart.reduce(function(acc,ele){return acc+ele.props.price},0)+"$"}</span></div>:value.minicart.length===0?<div className="empty">YOUR BAG IS EMPTY</div>:<div className="total">Total <span>{value.minicart[0].props.price+"$"}</span></div>}
-          
-            </>)
-          }}
-             
-             </myContext.Consumer>
+            <exchangeContext.Consumer>
+              {(v)=>{return(<>
+                {value.minicart.length>1?<div className="total">Total <span>{value.minicart.reduce((acc,ele)=>{return Math.ceil(ele.props.price*v.EXR)+acc},0)+v.currency}</span></div>:value.minicart.length===0?<div className="empty">YOUR BAG IS EMPTY</div>:<div className="total">Total <span>{Math.ceil(value.minicart[0].props.price*v.EXR)+v.currency}</span></div>}
+              </>)}}
+            </exchangeContext.Consumer>
+            
              <div>
                <div className="buttons">
                <Link to="/cart"><button>VIEW BAG</button></Link>
@@ -118,12 +124,9 @@ class Nav extends React.Component {
            </div>
           </div>
         </div>
-            )
-          }}
-               
-        
-        </Query>
-        </exchangeContext.Provider>
+</>)}}</myContext.Consumer>
+       
+           
         );
     }
 }

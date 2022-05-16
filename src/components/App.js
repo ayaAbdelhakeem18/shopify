@@ -1,4 +1,4 @@
-import react from "react";
+import react, { createRef } from "react";
 import React from "react";
 import "../styling/app.css";
 import{BrowserRouter,Routes,Route}from"react-router-dom";
@@ -8,6 +8,8 @@ import PLP from "./plp";
 import Nav from "./nav";
 import Pdp from "./pdp";
 import Cart from "./cart";
+import{change_currency}from "../graphql/queries";
+import {Query} from "@apollo/client/react/components";
 
 import one from "../images/1.png";
 import two from "../images/2.png";
@@ -47,13 +49,19 @@ const client=new ApolloClient({
 })
 
 export let myContext = React.createContext("");
+export let exchangeContext = React.createContext("");
 class App extends react.Component {
   constructor(props){
     super(props)  
     this.addTobigCart=this.addTobigCart.bind(this);
     this.addTominiCart=this.addTominiCart.bind(this);
+    this.valuedecreament=this.valuedecreament.bind(this);
+    this.valueincreament=this.valueincreament.bind(this);
+    this.pdpref=createRef;
   this.state = { 
-    countproducts:"",
+    quantity:0,
+    exchange_rate:1,
+    currency:"€",
     minicart:[],
     bigcart:[],
       gender:{
@@ -89,40 +97,18 @@ class App extends react.Component {
    }
    
    addTominiCart(e){
-    
-    let element=<Pdp class="mini-cart-pro" name={e.name} price={e.price} img={e.img}  />;
+    let element=<Pdp class="mini-cart-pro" ref={this.pdpref} name={e.name} price={e.price} img={e.img} value={e.elevalue} />;
     this.setState((prev) => {
       return {
         ...prev,
         minicart: [...this.state.minicart, element],
       };
     });
-    this.setState(function(state) {
-      return {
-        countproducts: <style>
-        {`
-        .icons::before{
-          content: "1";
-          position: absolute;
-          width: 15px;
-          height: 15px;
-          background-color: black;
-          color: white;
-          top: 29px;
-          right: 93px;
-          border-radius: 12px;
-          text-align: center;
-          padding: 2px;
-          padding-bottom: 2px;
-          font-size: small;
-          }
-        `}
-      </style>
-      };
-    });
+       
  }
+
    addTobigCart(e){
-    let element=<Pdp class="product-cart" name={e.props.name} price={e.props.price} img={e.props.img} value={e.state.value} this={e} />;
+    let element=<Pdp class="product-cart" ref={this.pdpref} name={e.props.name} price={e.props.price} img={e.props.img} remove={this.setState({bigcart:this.state.bigcart.slice(this.state.bigcart.length,1)}) } index={this.state.bigcart.length}/>;
     this.setState((prev) => {
       return {
         ...prev,
@@ -131,7 +117,12 @@ class App extends react.Component {
     });
   
  }
- 
+ valueincreament(){
+this.setState((state)=>({ quantity:state.quantity+1}))
+}
+ valuedecreament(){
+  this.setState((state)=>({quantity:state.quantity-1}))
+ }
   render() {
     
     
@@ -155,24 +146,33 @@ class App extends react.Component {
     
     return (
       <ApolloProvider client={client}>
-      <myContext.Provider value={{minicart:this.state.minicart,fM:this.addTominiCart,fG:this.addTobigCart,bigcart:this.state.bigcart}}>
+      <myContext.Provider value={{minicart:this.state.minicart,fM:this.addTominiCart,fG:this.addTobigCart,bigcart:this.state.bigcart,incr:this.valueincreament,dcr:this.valuedecreament,quantity:this.state.quantity}}>
+       <exchangeContext.Provider value={{EXR:this.state.exchange_rate,currency:this.state.currency}}> 
+      <Query query={change_currency}  >
+          {({error,data})=>{
+            if(error){
+              return <div>Error...</div>
+            }
+            return(
       <BrowserRouter>
-      <Nav countproducts={this.state.countproducts} />
-      {console.log(this.state.countproducts)}
+      <Nav  usd={()=>{this.setState({exchange_rate:data.latest[1].quote});this.setState({currency:"$"})}}
+            eur={()=>{this.setState({exchange_rate:1});this.setState({currency:"€"})}} jpy={()=>{this.setState({exchange_rate:data.latest[0].quote});this.setState({currency:"¥"})}}/>
       <Routes>
 
           <Route path="/"  element={<PLP gender={this.state.gender.women}/>} />
           <Route path="/men" element={<PLP gender={this.state.gender.men}/>}/>
           <Route path="/kids" element={<PLP gender={this.state.gender.kids}/>}/>
+
         { pathWomen.map(function(ele,ind){  
           let name= state.gender.women[ind].name;
           let price= state.gender.women[ind].price;
           let description= state.gender.women[ind].description;
           let img= state.gender.women[ind].img;
+          let value=state.value
           
           
         return(
-        <Route key={ind} path={ele} element={<Pdp name={name} price={price} description={description} img={img} class="product-page"  />}/>
+        <Route key={ind} path={ele} element={<Pdp name={name} price={price} description={description} img={img} class="product-page" value={value} />}/>
         );
       })}
         { pathmen.map(function(ele,ind){  
@@ -180,8 +180,10 @@ class App extends react.Component {
           let price= state.gender.men[ind].price;
           let description= state.gender.men[ind].description;
           let img= state.gender.men[ind].img;
+          let value=state.value
+
         return(
-        <Route key={ind} path={ele} element={<Pdp name={name} price={price} description={description} img={img} class="product-page" />}/>
+        <Route key={ind} path={ele} element={<Pdp name={name} price={price} description={description} img={img} class="product-page" value={value}/>}/>
         );
       })}
 
@@ -190,8 +192,10 @@ class App extends react.Component {
           let price= state.gender.kids[ind].price;
           let description= state.gender.kids[ind].description;
           let img= state.gender.kids[ind].img;
+          let value=state.value
+
         return(
-        <Route key={ind} path={ele} element={<Pdp name={name} price={price} description={description} img={img} class="product-page"/>}/>
+        <Route key={ind} path={ele} element={<Pdp name={name} price={price} description={description} img={img} class="product-page" value={value}/>}/>
         );
       })}
       <Route path="/cart" element={<Cart elements={this.state.array} ></Cart>}/>
@@ -209,8 +213,14 @@ class App extends react.Component {
           
     
     </BrowserRouter>
-    </myContext.Provider> 
-    </ApolloProvider>
+     )
+    }}
+         
+  
+</Query>
+</exchangeContext.Provider>
+</myContext.Provider> 
+</ApolloProvider>
     )
     ;
   }

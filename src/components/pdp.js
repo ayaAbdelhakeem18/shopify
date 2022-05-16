@@ -5,7 +5,7 @@ import "../styling/productCart.css"
 import grey from "../images/2.png";
 import black from"../images/black.webp";
 import offwhite from"../images/off white.webp";
-
+import { exchangeContext } from "./App";
 
 export default class Pdp extends React.Component {
     constructor(props){
@@ -14,7 +14,7 @@ export default class Pdp extends React.Component {
       this.handleColorClick=this.handleColorClick.bind(this);
       this.handleImgClick=this.handleImgClick.bind(this);
       this.onChange=this.onChange.bind(this);
-
+      this.handleremove=this.handleremove.bind(this) 
      this.myRef=createRef();
 
 
@@ -25,8 +25,7 @@ export default class Pdp extends React.Component {
         description:this.props.description,
         size:null,
         color:null,
-        value:1,
-        clicked:this.props.clicked,
+        elevalue:1,
     }
     }
     
@@ -72,70 +71,87 @@ handleImgClick(event){
 }
 onChange(event){
 event.preventDefault();
-this.setState({value:event.target.value});
+this.setState({elevalue:event.target.value});
+}
+handleremove(e){
+     
+if(window.confirm("Are you sure you want to remove this item from your cart?")){e.target.parentElement.parentElement.parentElement.style.display = "none";};
+ 
 }
 
   render() {
       const size=["XS","S","M","L"] ;
       const f=this.handleSizeClick;  
-      console.log(this.props.value)
     return (
+        <myContext.Consumer>
+           {(value)=>{return(
+               <div className={this.props.class}>
        
-       <div className={this.props.class}>
+               <div className="flex-box">
+               <div className='product-image'>
+                   <div className='images-column'>
+                       <img src={this.state.product_img} onClick={this.handleImgClick} />
+                       <img src={this.state.product_img} onClick={this.handleImgClick}/>
+                       <img src={this.state.product_img} onClick={this.handleImgClick}/>
+                   </div>
+                   <div className='big-image' >
+                       <img src={this.state.product_img} ref={this.myRef}/>
+                   </div>
+               </div>
+               <form>
+                <button onClick={(e)=>{e.preventDefault();this.setState({elevalue:this.state.elevalue+1});value.incr()}}>+</button>   
+               <input type="number" className="quantity" value={this.state.elevalue} onChange={this.onChange}/>
+               <button  onClick={(e)=>{
+                   if(this.state.elevalue===1){
+                       if(window.confirm("Are you sure you want to remove this item from your cart?"))
+                       {e.target.parentElement.parentElement.parentElement.style.display = "none";value.dcr()}
+                    }
+                        else{this.setState({elevalue:this.state.elevalue-1}) ;value.dcr();}
+                         e.preventDefault();
+                         }}>-</button>   
+               </form>
+               </div>
+               <div className='product-description'>
+                   <span className="brand-name">Apollo</span>
+                   <h3>{this.state.product_name}</h3>
+                  <exchangeContext.Consumer>
+                      {(value)=>{return (
+                          <>
+                           <span className="cart-price">{Math.ceil(this.state.price*value.EXR) +value.currency}</span>
+                           <div className="size">
+                               <span>size:</span>
+                               <ul>
+                                   {size.map(function(ele,ind){
+                                       return(<li key={ind} onClick={f} >{ele }</li>)
+                                   } )}
+                               </ul>
+                           </div>
+                           <span className="color-span">Color:</span>
+                           <div className="color">
+                               <div className="grey" onClick={this.handleColorClick}></div>
+                               <div className="black" onClick={this.handleColorClick} ></div>
+                               <div className="offwhite" onClick={this.handleColorClick} ></div>
+                           </div>
+                           <div className="price">
+                           <span> price:</span>
+                           <p>{Math.ceil(this.state.price*value.EXR) +value.currency}</p>
+                           </div>
+                           </>
+                      )}}
+                  
+                   </exchangeContext.Consumer>
+                  
+                  <div className="add-to-cart"  onClick={()=>{ value.fG(this) ;value.fM(this.props)}}>
+                      ADD TO CART
+                   </div> 
+                   <p className="description">
+                         {this.state.description}
+                   </p>
+               </div>
+             </div>
+           )}}
        
-        <div className="flex-box">
-        <div className='product-image'>
-            <div className='images-column'>
-                <img src={this.state.product_img} onClick={this.handleImgClick} />
-                <img src={this.state.product_img} onClick={this.handleImgClick}/>
-                <img src={this.state.product_img} onClick={this.handleImgClick}/>
-            </div>
-            <div className='big-image' >
-                <img src={this.state.product_img} ref={this.myRef}/>
-            </div>
-        </div>
-        <form>
-         <button onClick={(event)=>{this.setState((state)=>({ value:state.value+1}));event.preventDefault();}}>+</button>   
-        <input type="number" min={1} className="quantity" value={this.state.value} onChange={this.onChange}/>
-        <button  onClick={this.state.value===1?(event)=>event.preventDefault():(event)=>{this.setState((state)=>({value:state.value-1}));event.preventDefault();}}>-</button>   
-        </form>
-        </div>
-        <div className='product-description'>
-            <span className="brand-name">Apollo</span>
-            <h3>{this.state.product_name}</h3>
-            <span className="cart-price">{this.state.price+"$"}</span>
-            <div className="size">
-                <span>size:</span>
-                <ul>
-                    {size.map(function(ele,ind){
-                        return(<li key={ind} onClick={f} >{ele }</li>)
-                    } )}
-                </ul>
-            </div>
-            <span className="color-span">Color:</span>
-            <div className="color">
-                <div className="grey" onClick={this.handleColorClick}></div>
-                <div className="black" onClick={this.handleColorClick} ></div>
-                <div className="offwhite" onClick={this.handleColorClick} ></div>
-            </div>
-            <div className="price">
-            <span> price:</span>
-            <p>{this.state.price+"$"}</p>
-            </div>
-            <myContext.Consumer>
-           { 
-           (value)=>{return(
-           <div className="add-to-cart"  onClick={()=>{ value.fG(this) ;value.fM(this.props)}}>
-               ADD TO CART
-            </div> )}
-
-            }
-            </myContext.Consumer>
-            <p className="description">
-                  {this.state.description}
-            </p>
-        </div>
-      </div>
+      </myContext.Consumer>
     )
   }
 }
