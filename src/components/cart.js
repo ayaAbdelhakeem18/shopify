@@ -1,67 +1,61 @@
 import React from 'react';
 import "../styling/cart.css";
-import { myContext } from './App';
 import empty from "../images/Empty.gif";
 import { exchangeContext } from './App';
+import { connect } from "react-redux";
+import Pdp from './pdp';
+import { total_quantity,total_price } from '../features/cartslice';
 
-export default class Cart extends React.Component {
+export  class Cart extends React.Component {
 constructor(props){
 super(props);
 
-this.state={
-products:[],  
-priceAfterTaxes:0,
-quantity:0,
-total:0,
 }
+componentDidMount(){
+  this.props.dispatch(total_quantity())
+  this.props.dispatch(total_price())
+
 }
-  render() {
-    let priceAfterTaxes="";
-    let quantity="";
-    let total="";
-     return (
-      <exchangeContext.Consumer>
-        {(v)=>{return(
- <div className='cart'>
- <myContext.Consumer>
-    {(value)=>{
-      if(value.bigcart.length>0){
-      priceAfterTaxes=value.bigcart.map((ele)=>{return Math.ceil(ele.props.price*v.EXR)*(0.21)}).reduce((acc,ele)=>{return acc+ele},0)
-      quantity=value.quantity+value.bigcart.length
-      total=value.bigcart.map((ele)=>{return Math.ceil(ele.props.price*v.EXR)}).reduce((acc,ele)=>{return acc+ele},0)*quantity+priceAfterTaxes}
-      return (
-      
-    <>
-   {value.bigcart.length>0? <h1 >Cart</h1>:<div className='empty-cart'>
-            <img src={empty}/>
-            <h2>your cart is empty</h2>
-            <p>Looks like you have not added anything to your cart, Go ahead and explore top categories</p>
-            </div>}
-  
-   
-      <div>{value.bigcart.map((el) => el)}</div> 
-    {value.bigcart.length>0?
-    <div className='info'>
-      
-          <span>Tax21%   :{"  "+priceAfterTaxes+" "+v.currency}</span> 
-          <span>Quantity :{"  "+quantity}</span>
-          <span>Total :{"  "+total+" "+v.currency}</span>
-          <button className='order'>ORDER</button>
-          </div>:null
-          }
-    
-   
-    
-    </>
-      )
-    
-    }}
-  </myContext.Consumer>
-  
- 
+
+render() {
+let taxes= this.props.cart.total_price*0.21;
+console.log(this.props.cart.total_price)
+return (
+<exchangeContext.Consumer>
+{(v)=>{return(
+<div className='cart'>
+{this.props.cart.cartItems.length===0? 
+<div className='empty-cart'>
+  <img src={empty}/>
+  <h2>your cart is empty</h2>
+  <p>Looks like you have not added anything to your cart, Go ahead and explore top categories</p>
+</div>:
+<div>
+<h1 >Cart</h1>
+{this.props.cart.cartItems.map((ele,ind)=>{
+return(
+<Pdp key={ind} class="product-cart" category={ele.category} name={ele.name} price={ele.price} mainImage={ele.mainImage} id={ele.id} available_colors={ele.available_colors} available_sizes={ele.available_sizes} selected_color={ele.selected_color} selected_size={ele.selected_size} imgs={ele.imgs}/>)  
+})}
+<div className='info'>
+<span>Tax21%{`  ${v.currency}${Math.ceil(taxes * v.EXR)}`}</span> 
+<span >Quantity :{" "+this.props.cart.total_quantity}</span> 
+<span >Total :{" "+v.currency+Math.ceil((this.props.cart.total_price)*v.EXR+taxes)}</span>
+<button className='order'>ORDER</button>
 </div>
-        )}}
-      </exchangeContext.Consumer> 
-    )
-  }
+</div>
 }
+</div>)}}
+</exchangeContext.Consumer> 
+)
+}
+}
+
+function mapStateToProps(store) {
+  return { products:store.products,
+           cart:store.cart,
+          }
+  }
+     
+    
+  export default connect(mapStateToProps)(Cart)
+  

@@ -4,6 +4,7 @@
 .products-list{
     display: grid;
     grid-template-columns: repeat(auto-fill,minmax(300px,1fr));
+    gap: 20px;
 }
 .plp h1{
     margin-bottom: 110px;
@@ -12,4 +13,22 @@
 }
 .plp p{
 font-weight: bold;
+}
+.out-of-stock{
+    position: relative;
+    filter: opacity(0.6);    
+}
+.out-of-stock::before{
+    content: "OUT-OF-STOCK";
+    position: absolute;
+    top: 34%;
+    left: 51px;
+    font-size: xx-large;
+    color: gray;
+}
+.plp a:hover{
+    box-shadow: 10px 20px 30px lightgray
+}
+.products-list a{
+    padding: 10px;
 }
