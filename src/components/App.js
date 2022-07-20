@@ -60,7 +60,7 @@ class App extends react.Component {
       <Nav  usd={()=>{this.setState({exchange_rate:data.latest[1].quote});this.setState({currency:"$"})}}
             eur={()=>{this.setState({exchange_rate:1});this.setState({currency:"€"})}} jpy={()=>{this.setState({exchange_rate:data.latest[0].quote});this.setState({currency:"¥"})}}/>
       <Routes >
-          <Route path="/" exact element={<PLP gender={this.props.products.value.women}/>} />
+          <Route path="https://github.com/ayaAbdelhakeem18/shopify.git/women" exact  element={<PLP gender={this.props.products.value.women}/>} />
           <Route path="/men" element={<PLP gender={this.props.products.value.men}/>}/>
           <Route path="/kids" element={<PLP gender={this.props.products.value.kids}/>}/>
 
