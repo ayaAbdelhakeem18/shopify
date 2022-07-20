@@ -78,7 +78,7 @@ class Nav extends React.Component {
         return (
           <div className="nav"  >
          <ul className="nav-list"  >
-        <Link   to="https://github.com/ayaAbdelhakeem18/shopify.git/women" onClick={this.handleclick} > <li  className={window.location.pathname==="https://github.com/ayaAbdelhakeem18/shopify.git"?"activ":""}>WOMEN</li></Link>
+        <Link   to="/" onClick={this.handleclick} > <li  className={window.location.pathname==="/"?"activ":""}>WOMEN</li></Link>
         <Link to="/men"onClick={this.handleclick} ><li  className={window.location.pathname==="/men"?"activ":""}>MEN</li></Link>
         <Link to="/kids"onClick={this.handleclick} ><li className={window.location.pathname==="/kids"?"activ":""}>KIDS</li></Link>
          </ul>
