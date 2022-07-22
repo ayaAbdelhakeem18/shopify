@@ -9,7 +9,9 @@ import {chosenItem,addtocart,quantityIncr,quantityDecr,total_quantity,total_pric
  class Pdp extends React.Component {
     constructor(props){
       super(props);
-      this.myRef=createRef()
+      this.myRef=createRef();
+      this.elementsRef=createRef();
+      this.ImgRef=createRef();
       this.handleSizeClick=this.handleSizeClick.bind(this);
       this.handleImgClick=this.handleImgClick.bind(this);
       this.onChange=this.onChange.bind(this);
@@ -49,7 +51,7 @@ handlecolorclick(e,ele){
         available_sizes:this.current().colors[this.state.color].sizes
     })})
 
-for(let i=0;i<e.target.parentElement.childNodes.length;i++){
+for(let i=0;i<this.elementsRef.current.parentElement.childNodes.length;i++){
     e.target.parentElement.childNodes[i].id=""
 }
 e.target.id="selected-color"
@@ -60,7 +62,7 @@ handleSizeClick=(event)=>{
    }
 
 handleImgClick(event){
-let children=event.target.parentElement.children;
+let children=this.ImgRef.current.parentElement.children;
 
 for(let x=0;x<children.length;x++){
     children[x].style.border="none";
@@ -164,7 +166,7 @@ this.props.class==="product-page"?
 <div className='images-column'>
 {
 this.state.imgs.map((ele,ind)=>{
-return(<img src={ele} onClick={this.handleImgClick} key={ind}/>)})
+return(<img src={ele} ref={this.ImgRef} onClick={this.handleImgClick} key={ind}/>)})
 }
 </div>:""
 }
@@ -233,7 +235,7 @@ this.state.available_sizes.map((ele,ind)=>{
 this.state.available_colors.map((ele,ind)=>{
 let colorCode= this.current().colors[ele].colorCode;
     return(
-<div key={ind} id={this.state.selected_color===ele?"selected-color":""} style={{background:`rgb${colorCode}`}} onClick={(e)=>{this.handlecolorclick(e,ele)}}></div>
+<div key={ind} id={this.state.selected_color===ele?"selected-color":""} style={{background:`rgb${colorCode}`}} ref={this.elementsRef} onClick={(e)=>{this.handlecolorclick(e,ele)}}></div>
 )}) :
        
 <div  id={"selected-color"} style={{background:`rgb${this.current().colors[this.props.selected_color].colorCode}`}} ></div>

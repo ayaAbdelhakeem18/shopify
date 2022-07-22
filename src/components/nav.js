@@ -10,10 +10,10 @@ import { exchangeContext } from "./App";
 import Pdp from "./pdp";
 import { total_price } from '../features/cartslice';
 
-
 class Nav extends React.Component {
     constructor(props){
       super(props);
+      this.linksREf=createRef()
       this.handleclick=this.handleclick.bind();
       this.handlecartclick=this.handlecartclick.bind(this);
       this.cancelfunc=this.cancelfunc.bind(this);
@@ -23,13 +23,12 @@ class Nav extends React.Component {
       this.currencyref=createRef();      
       
       this.state={
-        style:"",
         clicked:false,
       }
     }
 
      handleclick(event){
-      let children=event.target.parentElement.parentElement.children;
+      let children=this.linksREf.children;
       for(let x=0;x<children.length;x++){
         children[x].children[0].classList.remove("activ");
     };
@@ -39,16 +38,6 @@ class Nav extends React.Component {
     handlecartclick(){
     if(this.state.clicked===false){
     this.minicart.current.style.display="block";
-    this.setState({style:<style >
-      {`body::before{
-        content: "";
-        position: absolute;
-        width: 100%;
-        height: 300vh;
-        background: rgba(57, 55, 72, 0.22);
-        left: 0;
-        top: 78px;`}
-             </style>})
       this.setState({clicked:true})  }
       else{
         this.cancelfunc();
@@ -74,16 +63,26 @@ class Nav extends React.Component {
   }
     render() { 
       let taxes= this.props.cart.total_price*0.21;
-
         return (
           <div className="nav"  >
-         <ul className="nav-list"  >
+         <ul className="nav-list" ref={this.linksREf} >
         <Link   to="/" onClick={this.handleclick} > <li  className={window.location.pathname==="/"?"activ":""}>WOMEN</li></Link>
         <Link to="/men"onClick={this.handleclick} ><li  className={window.location.pathname==="/men"?"activ":""}>MEN</li></Link>
         <Link to="/kids"onClick={this.handleclick} ><li className={window.location.pathname==="/kids"?"activ":""}>KIDS</li></Link>
          </ul>
         <img  src={logo} className="logo" />
           {this.state.style} 
+          <style >
+        {this.state.clicked==true?
+        `body::before{
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 300vh;
+        background: rgba(57, 55, 72, 0.22);
+        left: 0;
+        top: 78px;`:""}
+             </style>
           <div className="icons" >
            <img src={currency} className="currency" onClick={this.handlecurrency}/>
            <div className="select" ref={this.currencyref}>

@@ -57,8 +57,8 @@ class App extends react.Component {
             }
             return(
       <BrowserRouter>
-      <Nav  usd={()=>{this.setState({exchange_rate:data.latest[1].quote});this.setState({currency:"$"})}}
-            eur={()=>{this.setState({exchange_rate:1});this.setState({currency:"€"})}} jpy={()=>{this.setState({exchange_rate:data.latest[0].quote});this.setState({currency:"¥"})}}/>
+      <Nav  usd={()=>{this.setState({exchange_rate: data.latest[1].quote ,currency: "$"});}}
+            eur={()=>{this.setState({exchange_rate:1,currency:"€"})}} jpy={()=>{this.setState({exchange_rate:data.latest[0].quote,currency:"¥"})}}/>
       <Routes >
           <Route path="/"  element={<PLP gender={this.props.products.value.women}/>} />
           <Route path="/men" element={<PLP gender={this.props.products.value.men}/>}/>
